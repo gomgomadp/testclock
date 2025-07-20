@@ -1,13 +1,15 @@
 package com.gomgom.testclock
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.DatePicker
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,88 +17,72 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var clockView: TextView
     private lateinit var dateView: TextView
-    private val handler = Handler()
-    private val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    private var clockJob: Job? = null
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd (E)", Locale.getDefault())
 
-    private val updateClock = object : Runnable {
-        override fun run() {
-            val cDate = Date()
-            val currentTime = timeFormat.format(cDate)
-            val currentDate = dateFormat.format(cDate)
-            clockView.text = currentTime
-            clockView.gravity = Gravity.CENTER  // 수직 + 수평 가운데 정렬
-            //gravity = Gravity.TOP or Gravity.START  // 왼쪽 상단
-
-            dateView.text = currentDate
-            dateView.gravity = Gravity.TOP
-            //dateView.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
-            //clockView.gravity = Gravity.BOTTOM or Gravity.END // 오른쪽 하단
-
-            handler.postDelayed(this, 1000) // 1초마다 갱신
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val layout = FrameLayout(this)
+
+        val layout = FrameLayout(this).apply { setBackgroundColor(Color.WHITE) }
 
         dateView = TextView(this).apply {
-            textSize = 24f
-            setTextColor(0xFF000000.toInt())
-            text = "20250720"
-            gravity = Gravity.START
+            textSize = 20f
+            typeface = Typeface.MONOSPACE
+            setTextColor(Color.BLACK)
         }
 
-        val dateParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
+        val dateParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.TOP or Gravity.START
-            topMargin = 20
-            leftMargin = 20
+            topMargin = 30
+            leftMargin = 30
         }
 
         clockView = TextView(this).apply {
             textSize = 48f
-            setTextColor(0xFF000000.toInt())
-            gravity = Gravity.CENTER
-            text = "21:00:00"
+            typeface = Typeface.MONOSPACE
+            setTextColor(Color.BLACK)
         }
 
-        val clockParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
+        val clockParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.CENTER
         }
 
         layout.addView(dateView, dateParams)
         layout.addView(clockView, clockParams)
-
         setContentView(layout)
     }
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        clockView = TextView(this).apply {
-//            textSize = 48f
-//            setTextColor(0xFF000000.toInt())  // 검정색 텍스트
-//            setBackgroundColor(0xFFFFFFFF.toInt()) // 흰 배경
-//            textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-//            gravity = Gravity.CENTER                        // 수직 + 수평 가운데 정렬
-//
-//        }
-//
-//        setContentView(clockView)
-//    }
 
     override fun onResume() {
         super.onResume()
-        handler.post(updateClock)
+        clockJob = lifecycleScope.launch {
+            var lastTime = ""
+            var lastDate = ""
+
+            while (isActive) {
+                val now = System.currentTimeMillis()
+                val currentTime = timeFormat.format(Date(now))
+                val currentDate = dateFormat.format(Date(now))
+
+                if (currentTime != lastTime) {
+                    clockView.text = currentTime
+                    lastTime = currentTime
+                }
+
+                if (currentDate != lastDate) {
+                    dateView.text = currentDate
+                    lastDate = currentDate
+                }
+
+                val nextTick = now + 1000 - (now % 1000)
+                val delay = nextTick - System.currentTimeMillis()
+                delay(delay)
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        handler.removeCallbacks(updateClock)
+        clockJob?.cancel()
     }
 }
