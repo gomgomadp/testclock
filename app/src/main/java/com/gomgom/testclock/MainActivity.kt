@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
@@ -155,19 +156,41 @@ class MainActivity : AppCompatActivity() {
         val savedLabel = view.findViewById<TextView>(R.id.labelSaved)
 
         saveButton.setOnClickListener {
+            val fontSize = fontSeekBar.progress + 48
+            val showSeconds = showSecondsSwitch.isChecked
+            val nightMode = nightModeSwitch.isChecked
+
+            // 1. 저장
             val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
             with(prefs.edit()) {
-                putInt("fontSize", fontSeekBar.progress + 48)
-                putBoolean("showSeconds", showSecondsSwitch.isChecked)
-                putBoolean("nightMode", nightModeSwitch.isChecked)
+                putInt("fontSize", fontSize)
+                putBoolean("showSeconds", showSeconds)
+                putBoolean("nightMode", nightMode)
                 apply()
             }
 
+            // 2. UI에 즉시 반영
+            clockView.textSize = fontSize.toFloat()
+
+            timeFormat.applyPattern(if (showSeconds) "HH:mm:ss" else "HH:mm")
+            // 즉시 반영되게 하려면 coroutine에서 포맷 체크하도록 구조화해도 좋아요
+
+            val bgColor = if (nightMode) Color.BLACK else Color.WHITE
+            val textColor = if (nightMode) Color.WHITE else Color.BLACK
+            clockView.setTextColor(textColor)
+            dateView.setTextColor(textColor)
+            (clockView.parent as? View)?.setBackgroundColor(bgColor)
+
+            // 3. 저장됨 피드백 + 자동 닫기
             savedLabel.text = "✔ 저장됨"
             savedLabel.visibility = View.VISIBLE
-            savedLabel.postDelayed({ savedLabel.visibility = View.GONE }, 2000)
-        }
 
+            savedLabel.postDelayed({
+                savedLabel.visibility = View.GONE
+                bottomSheet.dismiss() // 자동 닫기
+            }, 500)
+        }
+        bottomSheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheet.setContentView(view)
         bottomSheet.show()
     }
