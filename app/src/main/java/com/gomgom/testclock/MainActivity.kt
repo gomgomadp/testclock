@@ -84,14 +84,23 @@ class MainActivity : AppCompatActivity() {
 //
 //        saveButton.layoutParams = params
 //        layout.addView(saveButton)
-
         settingsIcon = ImageButton(this).apply {
-            setImageResource(R.drawable.ic_settings)  // Vector asset로 추가
+            setImageResource(R.drawable.ic_settings)
             setBackgroundColor(Color.TRANSPARENT)
             setOnClickListener {
-                showSettingsBottomSheet()
+                val sheet = SettingsBottomSheetFragment()
+                sheet.show(supportFragmentManager, "SettingsBottomSheet")
             }
         }
+
+
+//            ImageButton(this).apply {
+//            setImageResource(R.drawable.ic_settings)  // Vector asset로 추가
+//            setBackgroundColor(Color.TRANSPARENT)
+//            setOnClickListener {
+//                showSettingsBottomSheet()
+//            }
+//        }
                 val siconparams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT,
             FrameLayout.LayoutParams.WRAP_CONTENT
@@ -143,9 +152,27 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         clockJob?.cancel()
     }
+    fun applyClockSettings() {
+        val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
+        val fontSize = prefs.getInt("fontSize", 48)
+        val showSeconds = prefs.getBoolean("showSeconds", true)
+        val nightMode = prefs.getBoolean("nightMode", false)
+
+        clockView.textSize = fontSize.toFloat()
+        dateView.textSize = fontSize / 2f
+        timeFormat.applyPattern(if (showSeconds) "HH:mm:ss" else "HH:mm")
+
+        val bgColor = if (nightMode) Color.BLACK else Color.WHITE
+        val textColor = if (nightMode) Color.WHITE else Color.BLACK
+
+        clockView.setTextColor(textColor)
+        dateView.setTextColor(textColor)
+        (clockView.parent as? View)?.setBackgroundColor(bgColor)
+    }
 
     private fun showSettingsBottomSheet() {
-        val bottomSheet = BottomSheetDialog(this)
+        val bottomSheet = BottomSheetDialog(this, R.style.NoAnimationBottomSheetDialogTheme)
+        bottomSheet.setDismissWithAnimation(false) // 애니메이션 제거
         val view = layoutInflater.inflate(R.layout.setting_sheet, null)
 
         val fontSeekBar = view.findViewById<SeekBar>(R.id.seekFontSize)
@@ -194,4 +221,6 @@ class MainActivity : AppCompatActivity() {
         bottomSheet.setContentView(view)
         bottomSheet.show()
     }
+
+
 }
