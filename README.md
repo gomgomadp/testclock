@@ -34,4 +34,3 @@ override fun onPause() {
 
 private var clockJob: Job? = null
 
-띄운 뒤에 설정값을 저장하거나 UI에 반영하는 흐름도 추가
