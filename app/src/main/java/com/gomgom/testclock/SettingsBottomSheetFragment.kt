@@ -17,19 +17,23 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
 
-    override fun getTheme(): Int = R.style.NoAnimationBottomSheetDialogTheme
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        // 애니메이션 없는 테마로 BottomSheetDialog 생성
+        val dialog = BottomSheetDialog(requireContext(), R.style.NoAnimationBottomSheetDialogTheme)
+
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
+                // 전체 화면으로 확장되도록 설정
                 it.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
                 val behavior = BottomSheetBehavior.from(it)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
+                behavior.skipCollapsed = true // 중간에 멈추는 상태 건너뛰기
+                behavior.peekHeight = 0
+                it.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             }
         }
+        dialog.dismissWithAnimation = false
         return dialog
     }
 
@@ -43,6 +47,7 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
         val savedLabel = view.findViewById<TextView>(R.id.labelSaved)
 
         val prefs = requireActivity().getSharedPreferences("clock_prefs", Context.MODE_PRIVATE)
+
         fontSeekBar.progress = prefs.getInt("fontSize", 48) - 48
         showSecondsSwitch.isChecked = prefs.getBoolean("showSeconds", true)
         nightModeSwitch.isChecked = prefs.getBoolean("nightMode", false)
@@ -66,4 +71,15 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
 
         return view
     }
+    override fun onStart() {
+        super.onStart()
+        val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
+        bottomSheet?.requestLayout()
+    }
+    override fun onResume() {
+        super.onResume()
+        dialog?.window?.setWindowAnimations(-1)
+    }
+
 }
