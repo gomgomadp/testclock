@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
             setBackgroundColor(Color.TRANSPARENT)
             setOnClickListener {
                 val sheet = SettingsBottomSheetFragment()
+
                 sheet.show(supportFragmentManager, "SettingsBottomSheet")
             }
         }
@@ -109,6 +110,8 @@ class MainActivity : AppCompatActivity() {
             bottomMargin = 30
             rightMargin = 30
         }
+
+
         settingsIcon.layoutParams = siconparams
         val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
         val fontSize = prefs.getInt("fontSize", 48)
@@ -116,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         layout.addView(dateView, dateParams)
         layout.addView(clockView, clockParams)
         layout.addView(settingsIcon)
+        applyClockSettings()
         setContentView(layout)
 
     }
