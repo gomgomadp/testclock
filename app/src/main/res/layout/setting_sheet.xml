@@ -6,11 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:text="글자 크기"
+    <TextView android:text="시간 글자 크기"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
     <SeekBar android:id="@+id/seekFontSize" android:max="24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView android:text="날짜 글자 크기"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <SeekBar android:id="@+id/seekDateFontSize" android:max="24"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
