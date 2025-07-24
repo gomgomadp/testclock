@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 기존 스타일 정의와 함께 추가 -->
+<resources>
+
+        <!-- BottomSheetDialog용 애니메이션 제거 테마 -->
+        <style name="NoAnimationBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+            <item name="android:windowAnimationStyle">@null</item>
+            <item name="bottomSheetStyle">@style/NoAnimationBottomSheetStyle</item>
+        </style>
+
+        <!-- 실제 BottomSheet 스타일 -->
+        <style name="NoAnimationBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+            <item name="android:background">@drawable/bottom_sheet_background</item>
+            <item name="android:layout_height">match_parent</item>
+        </style>
+
+    <!-- 앱 전체 테마가 정의돼 있을 경우 -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- 다른 속성들 -->
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- BottomSheetDialog 커스텀 테마 -->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <!-- BottomSheet 스타일 정의 -->
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <!--<item name="android:background">@drawable/bottom_sheet_background</item>-->
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+</resources>
