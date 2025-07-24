@@ -41,6 +41,7 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.setting_sheet, container, false)
 
         val fontSeekBar = view.findViewById<SeekBar>(R.id.seekFontSize)
+        val dateFontSeekBar = view.findViewById<SeekBar>(R.id.seekDateFontSize)
         val showSecondsSwitch = view.findViewById<Switch>(R.id.switchSeconds)
         val nightModeSwitch = view.findViewById<Switch>(R.id.switchNight)
         val saveButton = view.findViewById<Button>(R.id.buttonSave)
@@ -49,12 +50,14 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
         val prefs = requireActivity().getSharedPreferences("clock_prefs", Context.MODE_PRIVATE)
 
         fontSeekBar.progress = prefs.getInt("fontSize", 48) - 48
+        dateFontSeekBar.progress = prefs.getInt("dateFontSize", 20) - 12
         showSecondsSwitch.isChecked = prefs.getBoolean("showSeconds", true)
         nightModeSwitch.isChecked = prefs.getBoolean("nightMode", false)
 
         saveButton.setOnClickListener {
             with(prefs.edit()) {
                 putInt("fontSize", fontSeekBar.progress + 48)
+                putInt("dateFontSize", dateFontSeekBar.progress + 12)
                 putBoolean("showSeconds", showSecondsSwitch.isChecked)
                 putBoolean("nightMode", nightModeSwitch.isChecked)
                 apply()
