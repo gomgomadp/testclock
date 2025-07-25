@@ -1,22 +1,21 @@
 package com.gomgom.testclock
 
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.SeekBar
-import android.widget.Switch
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,8 +27,8 @@ class MainActivity : AppCompatActivity() {
     private var clockJob: Job? = null
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd (E)", Locale.getDefault())
-    lateinit var saveButton: Button
-    lateinit var settingsIcon: ImageButton
+    private var showSeconds = true
+    private lateinit var settingsIcon: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +36,7 @@ class MainActivity : AppCompatActivity() {
         val layout = FrameLayout(this).apply { setBackgroundColor(Color.WHITE) }
 
         dateView = TextView(this).apply {
-            textSize = 20f
             typeface = Typeface.MONOSPACE
-            setTextColor(Color.BLACK)
         }
 
         val dateParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
@@ -49,83 +46,74 @@ class MainActivity : AppCompatActivity() {
         }
 
         clockView = TextView(this).apply {
-            textSize = 48f
             typeface = Typeface.MONOSPACE
-            setTextColor(Color.BLACK)
         }
 
         val clockParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.CENTER
         }
 
-
-//         saveButton = Button(this).apply {
-//            text = "설정 저장"
-//            setOnClickListener {
-//                val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
-//                with(prefs.edit()) {
-//                    putInt("fontSize", 60)
-//                    putBoolean("showSeconds", true)
-//                    apply()
-//                }
-//                Toast.makeText(this@MainActivity, "설정이 저장되었습니다", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        val params = FrameLayout.LayoutParams(
-//            FrameLayout.LayoutParams.WRAP_CONTENT,
-//            FrameLayout.LayoutParams.WRAP_CONTENT
-//        ).apply {
-//            gravity = Gravity.BOTTOM or Gravity.END
-//            bottomMargin = 30
-//            rightMargin = 30
-//        }
-//
-//
-//        saveButton.layoutParams = params
-//        layout.addView(saveButton)
         settingsIcon = ImageButton(this).apply {
             setImageResource(R.drawable.ic_settings)
             setBackgroundColor(Color.TRANSPARENT)
+            scaleType = ImageView.ScaleType.FIT_CENTER
             setOnClickListener {
-                val sheet = SettingsBottomSheetFragment()
+                // Calculate max font size in pixels that fits the screen
+                val paint = Paint().apply {
+                    typeface = clockView.typeface
+                }
+                val textToMeasure = "00:00:00"
+                val screenWidth = resources.displayMetrics.widthPixels
+                val targetWidth = screenWidth * 0.95f
 
+                // Binary search for the best text size
+                var high = 2000f
+                var low = 0f
+                while (high - low > 1) {
+                    val mid = (high + low) / 2
+                    paint.textSize = mid
+                    if (paint.measureText(textToMeasure) > targetWidth) {
+                        high = mid
+                    } else {
+                        low = mid
+                    }
+                }
+                val maxFontSizePx = low
+
+                val sheet = SettingsBottomSheetFragment().apply {
+                    arguments = Bundle().apply {
+                        putFloat("maxFontSizePx", maxFontSizePx)
+                    }
+                }
                 sheet.show(supportFragmentManager, "SettingsBottomSheet")
             }
         }
 
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val iconSize = screenWidth / 10 // 화면 너비의 1/10 크기로 설정
 
-//            ImageButton(this).apply {
-//            setImageResource(R.drawable.ic_settings)  // Vector asset로 추가
-//            setBackgroundColor(Color.TRANSPARENT)
-//            setOnClickListener {
-//                showSettingsBottomSheet()
-//            }
-//        }
-                val siconparams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
+        val siconparams = FrameLayout.LayoutParams(
+            iconSize,
+            iconSize
         ).apply {
             gravity = Gravity.BOTTOM or Gravity.END
             bottomMargin = 30
             rightMargin = 30
         }
 
-
         settingsIcon.layoutParams = siconparams
-        val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
-        val fontSize = prefs.getInt("fontSize", 48)
-        val showSeconds = prefs.getBoolean("showSeconds", true)
         layout.addView(dateView, dateParams)
         layout.addView(clockView, clockParams)
         layout.addView(settingsIcon)
-        applyClockSettings()
         setContentView(layout)
 
+        applyClockSettings() // 앱 시작 시 저장된 설정 적용
     }
 
     override fun onResume() {
         super.onResume()
+        applyClockSettings() // 다른 화면에서 돌아왔을 때도 설정 적용
         clockJob = lifecycleScope.launch {
             var lastTime = ""
             var lastDate = ""
@@ -145,9 +133,20 @@ class MainActivity : AppCompatActivity() {
                     lastDate = currentDate
                 }
 
-                val nextTick = now + 1000 - (now % 1000)
-                val delay = nextTick - System.currentTimeMillis()
-                delay(delay)
+                val delayMs = if (showSeconds) {
+                    // Refresh every second
+                    val nextTick = now + 1000 - (now % 1000)
+                    nextTick - System.currentTimeMillis()
+                } else {
+                    // Refresh every minute
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = now
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MILLISECOND, 0)
+                    calendar.add(Calendar.MINUTE, 1)
+                    calendar.timeInMillis - System.currentTimeMillis()
+                }
+                delay(delayMs.coerceAtLeast(0))
             }
         }
     }
@@ -156,75 +155,55 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         clockJob?.cancel()
     }
+
     fun applyClockSettings() {
         val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
-        val fontSize = prefs.getInt("fontSize", 48)
-        val showSeconds = prefs.getBoolean("showSeconds", true)
-        val nightMode = prefs.getBoolean("nightMode", false)
 
-        clockView.textSize = fontSize.toFloat()
-        dateView.textSize = fontSize / 2f
+        // Font Sizes (in pixels)
+        val defaultFontSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 48f, resources.displayMetrics).toInt()
+        val defaultDateFontSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20f, resources.displayMetrics).toInt()
+        val fontSize = prefs.getInt("fontSize", defaultFontSizePx)
+        val dateFontSize = prefs.getInt("dateFontSize", defaultDateFontSizePx)
+
+        // Other Settings
+        this.showSeconds = prefs.getBoolean("showSeconds", true)
+        val nightMode = prefs.getBoolean("nightMode", false)
+        val iconWhite = prefs.getBoolean("iconWhite", false)
+
+        // Apply font sizes
+        clockView.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize.toFloat())
+        dateView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dateFontSize.toFloat())
+
+        // Apply time format
         timeFormat.applyPattern(if (showSeconds) "HH:mm:ss" else "HH:mm")
 
+        // Apply Date Format
+        val dateFormatSetting = prefs.getString("dateFormat", "yyyy-MM-dd (E)")
+        if (dateFormatSetting == "HIDE_DATE") {
+            dateView.visibility = View.GONE
+        } else {
+            dateView.visibility = View.VISIBLE
+            var pattern = dateFormatSetting
+            if (pattern == "CUSTOM_FORMAT") {
+                pattern = prefs.getString("customDateFormat", "yyyy-MM-dd (E)")
+            }
+            try {
+                dateFormat.applyPattern(pattern)
+            } catch (e: IllegalArgumentException) {
+                // Revert to default if pattern is invalid
+                dateFormat.applyPattern("yyyy-MM-dd (E)")
+                Toast.makeText(this, "잘못된 날짜 형식입니다. 기본값으로 복원됩니다.", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Apply colors
         val bgColor = if (nightMode) Color.BLACK else Color.WHITE
         val textColor = if (nightMode) Color.WHITE else Color.BLACK
+        val iconColor = if (iconWhite) Color.WHITE else Color.BLACK
 
         clockView.setTextColor(textColor)
         dateView.setTextColor(textColor)
+        settingsIcon.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN)
         (clockView.parent as? View)?.setBackgroundColor(bgColor)
     }
-
-    private fun showSettingsBottomSheet() {
-        val bottomSheet = BottomSheetDialog(this, R.style.NoAnimationBottomSheetDialogTheme)
-        bottomSheet.setDismissWithAnimation(false) // 애니메이션 제거
-        val view = layoutInflater.inflate(R.layout.setting_sheet, null)
-
-        val fontSeekBar = view.findViewById<SeekBar>(R.id.seekFontSize)
-        val showSecondsSwitch = view.findViewById<Switch>(R.id.switchSeconds)
-        val nightModeSwitch = view.findViewById<Switch>(R.id.switchNight)
-
-        val saveButton = view.findViewById<Button>(R.id.buttonSave)
-        val savedLabel = view.findViewById<TextView>(R.id.labelSaved)
-
-        saveButton.setOnClickListener {
-            val fontSize = fontSeekBar.progress + 48
-            val showSeconds = showSecondsSwitch.isChecked
-            val nightMode = nightModeSwitch.isChecked
-
-            // 1. 저장
-            val prefs = getSharedPreferences("clock_prefs", MODE_PRIVATE)
-            with(prefs.edit()) {
-                putInt("fontSize", fontSize)
-                putBoolean("showSeconds", showSeconds)
-                putBoolean("nightMode", nightMode)
-                apply()
-            }
-
-            // 2. UI에 즉시 반영
-            clockView.textSize = fontSize.toFloat()
-
-            timeFormat.applyPattern(if (showSeconds) "HH:mm:ss" else "HH:mm")
-            // 즉시 반영되게 하려면 coroutine에서 포맷 체크하도록 구조화해도 좋아요
-
-            val bgColor = if (nightMode) Color.BLACK else Color.WHITE
-            val textColor = if (nightMode) Color.WHITE else Color.BLACK
-            clockView.setTextColor(textColor)
-            dateView.setTextColor(textColor)
-            (clockView.parent as? View)?.setBackgroundColor(bgColor)
-
-            // 3. 저장됨 피드백 + 자동 닫기
-            savedLabel.text = "✔ 저장됨"
-            savedLabel.visibility = View.VISIBLE
-
-            savedLabel.postDelayed({
-                savedLabel.visibility = View.GONE
-                bottomSheet.dismiss() // 자동 닫기
-            }, 500)
-        }
-        bottomSheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheet.setContentView(view)
-        bottomSheet.show()
-    }
-
-
 }
