@@ -37,6 +37,9 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        disable.add("NullSafeMutableLiveData")
+    }
 }
 
 dependencies {
@@ -51,6 +54,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    // Ad & Billing Libraries
+    implementation("com.google.android.gms:play-services-ads:23.1.0") {
+        exclude(group = "com.google.android.gms", module = "play-services-ads-api")
+    }
+    implementation("com.android.billingclient:billing-ktx:6.2.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

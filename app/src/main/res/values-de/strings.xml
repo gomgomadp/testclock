@@ -1,0 +1,30 @@
+<resources>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">Schriftgröße der Uhrzeit</string>
+    <string name="app_setting_date_format">Datumsanzeigeformat</string>
+    <string name="app_setting_custom_date_format_hint">z.B. yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">Schriftgröße des Datums</string>
+    <string name="app_setting_show_seconds">Sekunden anzeigen</string>
+    <string name="app_setting_night_mode">Nachtmodus</string>
+    <string name="app_setting_icon_white">Einstellungssymbol in Weiß</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">Speichern</string>
+    <string name="app_setting_saved_feedback">✔ Gespeichert</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">Datum ausblenden</string>
+    <string name="app_date_format_custom">Benutzerdefiniert</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">Ungültiges Datumsformat. Standard wiederhergestellt.</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">Werbung entfernen</string>
+    <string name="app_remove_ads_message">Wählen Sie, wie Sie Werbung entfernen möchten.</string>
+    <string name="app_remove_ads_watch_ad">Werbung für 24 Stunden werbefrei ansehen</string>
+    <string name="app_remove_ads_purchase">Dauerhaft kaufen</string>
+    <string name="app_remove_ads_cancel">Abbrechen</string>
+    <string name="app_reward_granted_message">Werbung wurde für 24 Stunden entfernt.</string>
+    <string name="app_reward_failed_message">Anzeige konnte nicht geladen werden. Bitte versuchen Sie es später erneut.</string>
+</resources>

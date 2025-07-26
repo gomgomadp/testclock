@@ -1,0 +1,30 @@
+<resources>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">Taille de la police de l\'heure</string>
+    <string name="app_setting_date_format">Format d\'affichage de la date</string>
+    <string name="app_setting_custom_date_format_hint">ex., yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">Taille de la police de la date</string>
+    <string name="app_setting_show_seconds">Afficher les secondes</string>
+    <string name="app_setting_night_mode">Mode nuit</string>
+    <string name="app_setting_icon_white">Icône des paramètres blanche</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">Enregistrer</string>
+    <string name="app_setting_saved_feedback">✔ Enregistré</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">Masquer la date</string>
+    <string name="app_date_format_custom">Personnalisé</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">Format de date invalide. Retour au format par défaut.</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">Supprimer les publicités</string>
+    <string name="app_remove_ads_message">Choisissez comment supprimer les publicités.</string>
+    <string name="app_remove_ads_watch_ad">Regarder une pub pour 24h sans pub</string>
+    <string name="app_remove_ads_purchase">Acheter définitivement</string>
+    <string name="app_remove_ads_cancel">Annuler</string>
+    <string name="app_reward_granted_message">Les publicités ont été supprimées pendant 24 heures.</string>
+    <string name="app_reward_failed_message">Échec du chargement de la publicité. Veuillez réessayer plus tard.</string>
+</resources>

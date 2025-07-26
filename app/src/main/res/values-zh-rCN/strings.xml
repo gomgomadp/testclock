@@ -1,0 +1,30 @@
+<resources>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">时间字体大小</string>
+    <string name="app_setting_date_format">日期显示格式</string>
+    <string name="app_setting_custom_date_format_hint">例如 yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">日期字体大小</string>
+    <string name="app_setting_show_seconds">显示秒</string>
+    <string name="app_setting_night_mode">夜间模式</string>
+    <string name="app_setting_icon_white">白色设置图标</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">保存</string>
+    <string name="app_setting_saved_feedback">✔ 已保存</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">隐藏日期</string>
+    <string name="app_date_format_custom">自定义</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">无效的日期格式。已恢复为默认值。</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">移除广告</string>
+    <string name="app_remove_ads_message">请选择移除广告的方式。</string>
+    <string name="app_remove_ads_watch_ad">观看广告以享受24小时免广告</string>
+    <string name="app_remove_ads_purchase">永久购买</string>
+    <string name="app_remove_ads_cancel">取消</string>
+    <string name="app_reward_granted_message">广告已移除24小时。</string>
+    <string name="app_reward_failed_message">广告加载失败。请稍后再试。</string>
+</resources>

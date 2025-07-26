@@ -1,61 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFFFFF"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TextView android:text="시간 글자 크기"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#FFFFFF"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <SeekBar android:id="@+id/seekFontSize" android:max="24"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content">
 
-    <TextView android:text="날짜 글자 크기"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <SeekBar android:id="@+id/seekDateFontSize" android:max="24"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <TextView android:text="@string/app_setting_time_font_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <SeekBar android:id="@+id/seekFontSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
-    <TextView android:text="초 표시"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <Switch android:id="@+id/switchSeconds"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <TextView
+            android:id="@+id/labelDateFormat"
+            android:text="@string/app_setting_date_format"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
 
-    <TextView android:text="야간 모드"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <Switch android:id="@+id/switchNight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <Spinner
+            android:id="@+id/spinnerDateFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/buttonSave"
-        android:text="저장"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <EditText
+            android:id="@+id/editCustomDateFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/app_setting_custom_date_format_hint"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/labelSaved"
-        android:text="✔ 저장됨"
-        android:textColor="#555555"
-        android:visibility="gone"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-</LinearLayout>
+        <TextView
+            android:id="@+id/labelDateFontSize"
+            android:text="@string/app_setting_date_font_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <SeekBar
+            android:id="@+id/seekDateFontSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView android:text="@string/app_setting_show_seconds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            />
+        <Switch android:id="@+id/switchSeconds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView android:text="@string/app_setting_night_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <Switch android:id="@+id/switchNight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView android:text="@string/app_setting_icon_white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <Switch android:id="@+id/switchIconWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:text="@string/app_setting_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            />
+
+        <TextView
+            android:id="@+id/labelSaved"
+            android:text="@string/app_setting_saved_feedback"
+            android:textColor="#555555"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+</ScrollView>

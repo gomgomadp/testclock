@@ -1,0 +1,30 @@
+<resources>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">시간 글자 크기</string>
+    <string name="app_setting_date_format">날짜 표시 형식</string>
+    <string name="app_setting_custom_date_format_hint">예: yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">날짜 글자 크기</string>
+    <string name="app_setting_show_seconds">초 표시</string>
+    <string name="app_setting_night_mode">야간 모드</string>
+    <string name="app_setting_icon_white">설정 아이콘 흰색</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">저장</string>
+    <string name="app_setting_saved_feedback">✔ 저장됨</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">날짜 숨기기</string>
+    <string name="app_date_format_custom">사용자 지정</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">잘못된 날짜 형식입니다. 기본값으로 복원됩니다.</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">광고 제거</string>
+    <string name="app_remove_ads_message">광고를 제거하는 방법을 선택하세요.</string>
+    <string name="app_remove_ads_watch_ad">광고 보고 24시간 제거</string>
+    <string name="app_remove_ads_purchase">영구적으로 구매</string>
+    <string name="app_remove_ads_cancel">취소</string>
+    <string name="app_reward_granted_message">24시간 동안 광고가 제거되었습니다.</string>
+    <string name="app_reward_failed_message">광고를 불러오지 못했습니다. 잠시 후 다시 시도하세요.</string>
+</resources>
