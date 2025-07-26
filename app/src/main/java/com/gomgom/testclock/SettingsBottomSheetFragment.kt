@@ -38,13 +38,13 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.setting_sheet, container, false)
 
-        // Initialize format list
+        // Initialize format list from string resources
         dateFormats = listOf(
-            "날짜 숨기기" to HIDE_DATE_KEY,
+            getString(R.string.app_date_format_hide) to HIDE_DATE_KEY,
             "yyyy-MM-dd (E)" to "yyyy-MM-dd (E)",
             "yyyy. MM. dd." to "yyyy. MM. dd.",
             "MM/dd/yyyy" to "MM/dd/yyyy",
-            "사용자 지정" to CUSTOM_FORMAT_KEY
+            getString(R.string.app_date_format_custom) to CUSTOM_FORMAT_KEY
         )
 
         // --- Get View References ---
@@ -135,7 +135,7 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
 
             (activity as? MainActivity)?.applyClockSettings()
 
-            savedLabel.text = "✔ 저장됨"
+            savedLabel.text = getString(R.string.app_setting_saved_feedback)
             savedLabel.visibility = View.VISIBLE
             savedLabel.postDelayed({ dismiss() }, 500)
         }

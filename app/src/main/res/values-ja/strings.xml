@@ -1,0 +1,30 @@
+<resources>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">時刻のフォントサイズ</string>
+    <string name="app_setting_date_format">日付の表示形式</string>
+    <string name="app_setting_custom_date_format_hint">例: yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">日付のフォントサイズ</string>
+    <string name="app_setting_show_seconds">秒を表示</string>
+    <string name="app_setting_night_mode">ナイトモード</string>
+    <string name="app_setting_icon_white">設定アイコンを白色に</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">保存</string>
+    <string name="app_setting_saved_feedback">✔ 保存しました</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">日付を非表示</string>
+    <string name="app_date_format_custom">カスタム</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">無効な日付形式です。デフォルトに戻しました。</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">広告を削除</string>
+    <string name="app_remove_ads_message">広告を削除する方法を選択してください。</string>
+    <string name="app_remove_ads_watch_ad">広告を見て24時間削除</string>
+    <string name="app_remove_ads_purchase">永久に購入</string>
+    <string name="app_remove_ads_cancel">キャンセル</string>
+    <string name="app_reward_granted_message">広告は24時間削除されました。</string>
+    <string name="app_reward_failed_message">広告の読み込みに失敗しました。後でもう一度お試しください。</string>
+</resources>

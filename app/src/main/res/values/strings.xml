@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">testClock</string>
+    <!-- Settings Screen Titles -->
+    <string name="app_setting_time_font_size">Time Font Size</string>
+    <string name="app_setting_date_format">Date Display Format</string>
+    <string name="app_setting_custom_date_format_hint">e.g., yyyy/MM/dd E</string>
+    <string name="app_setting_date_font_size">Date Font Size</string>
+    <string name="app_setting_show_seconds">Show Seconds</string>
+    <string name="app_setting_night_mode">Night Mode</string>
+    <string name="app_setting_icon_white">White Settings Icon</string>
+
+    <!-- Buttons and Feedback -->
+    <string name="app_setting_save">Save</string>
+    <string name="app_setting_saved_feedback">✔ Saved</string>
+
+    <!-- Date Format Spinner Options -->
+    <string name="app_date_format_hide">Hide Date</string>
+    <string name="app_date_format_custom">Custom</string>
+
+    <!-- Error Messages -->
+    <string name="app_error_invalid_date_format">Invalid date format. Reverted to default.</string>
+
+    <!-- Ad Removal Dialog -->
+    <string name="app_remove_ads_title">Remove Ads</string>
+    <string name="app_remove_ads_message">Choose how to remove ads.</string>
+    <string name="app_remove_ads_watch_ad">Watch Ad for 24h-Free</string>
+    <string name="app_remove_ads_purchase">Purchase Permanently</string>
+    <string name="app_remove_ads_cancel">Cancel</string>
+    <string name="app_reward_granted_message">Ads have been removed for 24 hours.</string>
+    <string name="app_reward_failed_message">Failed to load ad. Please try again later.</string>
+    <string name="app_name" translatable="false">Simple Clock for e-ink</string>
 </resources>
